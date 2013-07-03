@@ -4,4 +4,15 @@
 
 {% block content %}
 <h1>Index</h1>
+
+<textarea id="text-input" rows="30"></textarea>
+<div id="preview" />
+
+<script>
+    $(function() {
+        $('#text-input').keydown(function() {
+            $('#preview').html(markdown.toHTML($(this).val()));
+        });
+    });
+</script>
 {% endblock %}

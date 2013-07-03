@@ -1,11 +1,35 @@
 <html>
-    <head>
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    </head>
-    <body>
-        {% block content %}{% endblock %}
-    </body>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <style>
+      body {
+        padding-top: 60px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}" />
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/markdown.js') }}"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a href="#" class="brand">Hello</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
 </html>
