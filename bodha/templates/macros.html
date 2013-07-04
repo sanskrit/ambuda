@@ -1,0 +1,12 @@
+{# Show a list of projects #}
+{% macro project_list(projects) %}
+    <ul>
+    {% for p in projects %}
+        <li>
+            <a href="{{ url_for('project', slug=p.slug) }}">
+            <h3>{{ p.name }}</h3>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endmacro %}

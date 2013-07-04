@@ -1,18 +1,27 @@
 {% extends 'layout.html' %}
+{% import 'macros.html' as macros %}
 
 {% block title %}Index{% endblock %}
 
+{% block style %}
+.jumbotron {
+    margin: 60px 0;
+    text-align: center;
+}
+.jumbotron h1 {
+    font-size: 72px;
+    line-height: 1;
+}
+{% endblock %}
+
 {% block content %}
-<h1>Index</h1>
 
-<textarea id="text-input" rows="30"></textarea>
-<div id="preview" />
+<div class="container">
+    <div class="jumbotron">
+        <h1>Index</h1>
+    </div>
 
-<script>
-    $(function() {
-        $('#text-input').keydown(function() {
-            $('#preview').html(markdown.toHTML($(this).val()));
-        });
-    });
-</script>
+    <h1>1. Choose a project</h1>
+    {{ macros.project_list(projects) }}
+</div>
 {% endblock %}

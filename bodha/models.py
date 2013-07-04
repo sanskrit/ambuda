@@ -33,9 +33,9 @@ class Flag(Base):
 
 class Project(Base):
     #: Project title
-    title = db.Column(db.String)
+    name = db.Column(db.String)
     #: How the project appears in URLs
-    slug = db.Column(db.String, unique=True)
+    slug = db.Column(db.String(30), unique=True)
     #: Path to an instructions template
     instructions = db.Column(db.String, unique=True)
     #: Time created
@@ -49,6 +49,8 @@ class Project(Base):
 class Segment(Base):
     #: Filepath to the corresponding image
     image_path = db.Column(db.String, unique=True)
+    #: Number of times marked complete
+    num_completions = db.Column(db.Integer, default=0)
     #: Time created
     created = db.Column(db.DateTime, default=datetime.utcnow)
     #: The corresponding `Project`

@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+<h1>Projects</h1>
+
+{{ macros.project_list(projects) }}
+
+{% endblock %}

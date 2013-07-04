@@ -7,7 +7,7 @@ def main():
 
     if not Flag.query.count():
         print 'Creating flags...'
-        names = ['complete', 'difficult', 'pass']
+        names = ['submit', 'complete', 'hard', 'pass']
         for name in names:
             db.session.add(Flag(name=name))
 

@@ -3,9 +3,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
     <style>
-      body {
-        padding-top: 60px;
-      }
+      {% block style %}{% endblock %}
     </style>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}" />
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
@@ -13,21 +11,24 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/markdown.js') }}"></script>
   </head>
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a href="#" class="brand">Hello</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="{{ url_for('project_list') }}">Projects</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+        <h3 class="muted">Hello</h3>
+      </div>
+      <hr />
+      {% block flashed %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+          {% endfor %}
+      {% endwith %}
+      {% endblock %}
       {% block content %}
       {% endblock %}
     </div>
