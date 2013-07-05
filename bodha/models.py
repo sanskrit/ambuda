@@ -9,6 +9,9 @@
 """
 
 from datetime import datetime
+
+from flask.ext.principal import Permission, RoleNeed
+from flask.ext.security import UserMixin, RoleMixin
 from sqlalchemy.ext.declarative import declared_attr
 
 from bodha import db
@@ -78,3 +81,35 @@ class Revision(Base):
 
     flag = db.relationship('Flag', backref='revisions')
     segment = db.relationship('Segment', backref='revisions')
+
+
+# Authentication
+# --------------
+class UserRoleAssoc(db.Model):
+    __tablename__ = 'user_role_assoc'
+    user_id = db.Column(db.ForeignKey('user.id'), primary_key=True)
+    role_id = db.Column(db.ForeignKey('role.id'), primary_key=True)
+
+
+class User(Base, UserMixin):
+    email = db.Column(db.String, unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean)
+
+    roles = db.relationship('Role', secondary='user_role_assoc',
+                            backref='users')
+
+    def has_role(self, role):
+        p = Permission(RoleNeed(role))
+        return p.can()
+
+    def is_admin(self):
+        return self.has_role('admin')
+
+
+class Role(Base, RoleMixin):
+    name = db.Column(db.String)
+    description = db.Column(db.String)
+
+    def __repr__(self):
+        return '<Role(%s, %s)>' % (self.id, self.name)
