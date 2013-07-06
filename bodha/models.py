@@ -99,6 +99,9 @@ class User(Base, UserMixin):
     roles = db.relationship('Role', secondary='user_role_assoc',
                             backref='users')
 
+    def can_edit(self, project):
+        return self.is_admin()
+
     def has_role(self, role):
         p = Permission(RoleNeed(role))
         return p.can()

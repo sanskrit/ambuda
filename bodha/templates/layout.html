@@ -15,7 +15,8 @@
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
           <li><a href="{{ url_for('project_list') }}">Projects</a></li>
-          <li><a href="#">About</a></li>
+          {% if current_user.has_role('admin') %}<li><a href="{{ url_for('admin.index') }}">Admin</a></li>{% endif %}
+          <li><a href="#">{{ current_user.email }}</a></li>
         </ul>
         <h3 class="muted">Hello</h3>
       </div>

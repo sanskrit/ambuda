@@ -54,6 +54,7 @@ admin.add_view(ModelView(models.Role, db.session,
                          category='Auth',
                          name='Roles'))
 
+
 # Attach to app
 # -------------
 from bodha import app
