@@ -3,10 +3,23 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-<h1>Index</h1>
+<h1>{{ project.name }}</h1>
+<hr />
+<div class="row">
+    <div class="span6">
+        <img src="{{ images.url(segment.image_path) }}" />
+    </div>
+    <div class="span6">
+        <textarea id="text-input" rows="30" style="width: 100%"></textarea>
 
-<textarea id="text-input" rows="30"></textarea>
-<div id="preview" />
+        <div class="well">
+            <a href="" class="btn btn-primary">Save my changes</a>
+            <a href="" class="btn">Show me another page</a>
+            <a href="" class="btn btn-danger">Mark as complete</a>
+        </div>
+    </div>
+</div>
+{# <div id="preview" />
 
 <script>
     $(function() {
@@ -14,5 +27,5 @@
             $('#preview').html(markdown.toHTML($(this).val()));
         });
     });
-</script>
+</script> #}
 {% endblock %}

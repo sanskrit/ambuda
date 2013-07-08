@@ -48,6 +48,9 @@ class Project(Base):
 
     status = db.relationship('Status', backref='projects')
 
+    def __unicode__(self):
+        return self.slug
+
 
 class Segment(Base):
     #: Filepath to the corresponding image
@@ -63,6 +66,9 @@ class Segment(Base):
 
     project = db.relationship('Project', backref='segments')
     status = db.relationship('Status', backref='segments')
+
+    def __unicode__(self):
+        return self.image_path
 
 
 class Revision(Base):
