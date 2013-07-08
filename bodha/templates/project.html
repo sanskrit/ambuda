@@ -7,5 +7,8 @@
 
 <p>{{ project.segments|length }} segments</p>
 
+<a href="{{ url_for('segment_edit', slug=project.slug, id=None) }}" class="btn btn-primary btn-large">
+    Start editing
+</a>
 
 {% endblock %}

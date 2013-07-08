@@ -10,14 +10,17 @@
         <img src="{{ images.url(segment.image_path) }}" />
     </div>
     <div class="span6">
-        <textarea id="text-input" rows="30" style="width: 100%"></textarea>
-
-        <div class="well">
-            <a href="" class="btn btn-primary">Save my changes</a>
-            <a href="" class="btn">Show me another page</a>
-            <a href="" class="btn btn-danger">Mark as complete</a>
-        </div>
+        <form method="POST" action="">
+            {{ form.content(id='text-input', rows='30', style='width: 100%') }}
+        </form>
     </div>
+
+</div>
+
+<div class="well">
+    {{ form.in_progress(class='btn btn-primary') }}
+    <a href="{{ url_for('segment_edit', slug=project.slug) }}" class="btn">Show me another page</a>
+    {{ form.complete(class='btn btn-danger') }}
 </div>
 {# <div id="preview" />
 

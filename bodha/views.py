@@ -1,14 +1,16 @@
+import random
+
 import sqlalchemy.exc
 from flask import flash, redirect, render_template as render, url_for
 from flask.ext.uploads import configure_uploads, UploadSet, IMAGES
 
-
 from bodha import app, db
-from bodha.forms import ImagesForm
+from bodha.forms import ImagesForm, SegmentEditForm
 from bodha.models import *
 
 
 images = UploadSet('img', IMAGES)
+GET_POST = ['GET', 'POST']
 
 
 @app.context_processor
@@ -41,15 +43,36 @@ def project(slug):
     return render('project.html', project=_project)
 
 
-@app.route('/projects/<slug>/<int:id>')
-def segment(slug, id=None):
+def segment_data(project_id, id=None):
+    """
+
+    :param project_id:
+    :param id:
+    """
+    if id:
+        try:
+            return Segment.query.filter(Segment.id==id).one()
+        except sqlalchemy.exc.SQLAlchemyError:
+            pass
+
+    q = Segment.query.filter(Segment.project_id==project_id)
+    count = q.count()
+    return q.offset(random.randrange(count)).first()
+
+
+@app.route('/projects/<slug>/edit/', methods=GET_POST)
+@app.route('/projects/<slug>/edit/<int:id>', methods=GET_POST)
+def segment_edit(slug, id=None):
     try:
         _project = Project.query.filter(Project.slug==slug).one()
-        _segment = Segment.query.filter(Segment.id==id).one()
     except sqlalchemy.exc.SQLAlchemyError:
         return redirect(url_for('project_list'))
 
-    return render('segment.html', project=_project, segment=_segment)
+    _segment = segment_data(_project.id, id)
+
+    return render('segment.html', form=SegmentEditForm(),
+                  project=_project,
+                  segment=_segment)
 
 
 @app.route('/projects/<slug>/upload', methods=['GET', 'POST'])
@@ -73,13 +96,12 @@ def upload_segments(slug):
             ))
         db.session.commit()
 
-
         flash('Uploaded %s images.' % len(file_objs))
         success = True
     else:
         success = False
     return render('upload-segments.html', form=form,
-                           success=success)
+                  success=success)
 
 
 configure_uploads(app, (images,))
