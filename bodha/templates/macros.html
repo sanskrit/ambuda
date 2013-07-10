@@ -2,6 +2,7 @@
 {% macro edit_project(p, user, url) %}
     {% if user.can_edit and user.can_edit(p) %}
         <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit</a>
+        <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload</a>
     {% endif %}
 {% endmacro %}
 

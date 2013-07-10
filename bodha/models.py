@@ -13,6 +13,7 @@ from datetime import datetime
 from flask.ext.principal import Permission, RoleNeed
 from flask.ext.security import UserMixin, RoleMixin
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.ext.orderinglist import ordering_list
 
 from bodha import db
 
@@ -66,6 +67,8 @@ class Segment(Base):
 
     project = db.relationship('Project', backref='segments')
     status = db.relationship('Status', backref='segments')
+    revisions = db.relationship('Revision', backref='segment',
+                                collection_class=ordering_list('index'))
 
     def __unicode__(self):
         return self.image_path
@@ -74,19 +77,16 @@ class Segment(Base):
 class Revision(Base):
     #: Revision content
     content = db.Column(db.UnicodeText)
-    #: Any notes the user left on this revision
-    notes = db.Column(db.UnicodeText, nullable=True)
     #: Revision number. Higher numbers are more recent.
     index = db.Column(db.Integer, default=0, index=True)
     #: Time created
     created = db.Column(db.DateTime, default=datetime.utcnow)
-    #: The corresponding `Flag`
-    flag_id = db.Column(db.ForeignKey('flag.id'), index=True)
+    #: The corresponding `Status`
+    status_id = db.Column(db.ForeignKey('status.id'), index=True)
     #: The corresponding `Segment`
     segment_id = db.Column(db.ForeignKey('segment.id'), index=True)
 
-    flag = db.relationship('Flag', backref='revisions')
-    segment = db.relationship('Segment', backref='revisions')
+    status = db.relationship('Status', backref='revisions')
 
 
 # Authentication

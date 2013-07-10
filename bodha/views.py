@@ -1,7 +1,8 @@
 import random
 
 import sqlalchemy.exc
-from flask import flash, redirect, render_template as render, url_for
+from flask import flash, redirect, render_template as render, request, url_for
+from flask.ext.security.decorators import roles_required
 from flask.ext.uploads import configure_uploads, UploadSet, IMAGES
 
 from bodha import app, db
@@ -18,6 +19,11 @@ def upload_sets():
     return {
         'images': images
     }
+
+
+def missing_project(slug):
+    flash("Sorry, we couldn't find \"%s\"." % slug, 'error')
+    return redirect(url_for('project_list'))
 
 
 @app.route('/')
@@ -53,7 +59,7 @@ def segment_data(project_id, id=None):
         try:
             return Segment.query.filter(Segment.id==id).one()
         except sqlalchemy.exc.SQLAlchemyError:
-            pass
+            return None
 
     q = Segment.query.filter(Segment.project_id==project_id)
     count = q.count()
@@ -66,22 +72,36 @@ def segment_edit(slug, id=None):
     try:
         _project = Project.query.filter(Project.slug==slug).one()
     except sqlalchemy.exc.SQLAlchemyError:
-        return redirect(url_for('project_list'))
+        return missing_project(slug)
 
     _segment = segment_data(_project.id, id)
 
-    return render('segment.html', form=SegmentEditForm(),
+    form = SegmentEditForm()
+    if _segment.revisions:
+        form.content.data = _segment.revisions[-1].content
+
+    if form.validate_on_submit() and _segment is not None:
+        rev = Revision(
+            content=form.content.data,
+            status_id=None,
+            segment_id=_segment.id
+        )
+        db.session.add(rev)
+        db.session.commit()
+        return redirect(url_for('segment_edit', slug=_project.slug))
+
+    return render('segment.html', form=form,
                   project=_project,
                   segment=_segment)
 
 
 @app.route('/projects/<slug>/upload', methods=['GET', 'POST'])
+@roles_required('admin')
 def upload_segments(slug):
     try:
         _project = Project.query.filter(Project.slug==slug).one()
     except sqlalchemy.exc.SQLAlchemyError:
-        flash("Sorry, we couldn't find project '%s'." % slug, 'error')
-        return redirect(url_for('project_list'))
+        return missing_project(slug)
 
     form = ImagesForm()
     if form.validate_on_submit():

@@ -6,6 +6,10 @@
 {% block content %}
 <h1>Projects</h1>
 
+{% if projects %}
 {{ macros.project_list(projects, current_user) }}
+{% else %}
+<p>No projects!</p>
+{% endif %}
 
 {% endblock %}

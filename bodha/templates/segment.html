@@ -5,23 +5,31 @@
 {% block content %}
 <h1>{{ project.name }}</h1>
 <hr />
-<div class="row">
-    <div class="span6">
-        <img src="{{ images.url(segment.image_path) }}" />
-    </div>
-    <div class="span6">
-        <form method="POST" action="">
+
+<form method="POST" action="{{ url_for('segment_edit', slug=project.slug, id=segment.id) }}">
+    {{ form.csrf_token }}
+    <div class="row">
+        <div class="span6">
+            <img src="{{ images.url(segment.image_path) }}" />
+        </div>
+        <div class="span6">
             {{ form.content(id='text-input', rows='30', style='width: 100%') }}
-        </form>
+        </div>
     </div>
 
-</div>
+    {% set num_revisions = segment.revisions|length %}
+    <p>
+        {{ num_revisions }} revision{% if num_revisions != 1 %}s{% endif %}
+        {% if num_revisions > 0 %}(last updated on {{ segment.revisions[-1].created }}){% endif %}
+    </p>
 
-<div class="well">
-    {{ form.in_progress(class='btn btn-primary') }}
-    <a href="{{ url_for('segment_edit', slug=project.slug) }}" class="btn">Show me another page</a>
-    {{ form.complete(class='btn btn-danger') }}
-</div>
+    <div class="well">
+        {{ form.in_progress(class='btn btn-primary') }}
+        <a href="{{ url_for('segment_edit', slug=project.slug) }}" class="btn">Show me another page</a>
+        {{ form.complete(class='btn btn-danger') }}
+    </div>
+</form>
+
 {# <div id="preview" />
 
 <script>
