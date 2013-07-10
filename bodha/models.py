@@ -80,6 +80,8 @@ class Revision(Base):
     index = db.Column(db.Integer, default=0, index=True)
     #: Time created
     created = db.Column(db.DateTime, default=datetime.utcnow)
+    #: The corresponding `User`
+    user_id = db.Column(db.ForeignKey('user.id'), index=True)
     #: The corresponding `Segment`
     segment_id = db.Column(db.ForeignKey('segment.id'), index=True)
     #: Project status
@@ -87,6 +89,7 @@ class Revision(Base):
 
     # -- 'Segment' backref is addressed above.
     status = db.relationship('Status', backref='revisions')
+    user = db.relationship('User', backref='revisions')
 
 
 # Authentication

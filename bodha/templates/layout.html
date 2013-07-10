@@ -17,9 +17,24 @@
         <ul class="nav nav-pills pull-right">
           <li><a href="{{ url_for('project_list') }}">Projects</a></li>
           {% if current_user.has_role('admin') %}<li><a href="{{ url_for('admin.index') }}">Admin</a></li>{% endif %}
-          <li><a href="#">{{ current_user.email }}</a></li>
+          <li>
+          {% if current_user.is_authenticated() %}
+          <ul class="nav nav-pills">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ current_user.email }}
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="{{ url_for('security.logout') }}">Log out</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% else %}
+            <a href="{{ url_for('security.login') }}">Log in</a>
+          {% endif %}
+          </li>
         </ul>
-        <h3 class="muted">Hello</h3>
+        <h3 class="muted"><a href="{{ url_for('index') }}">Hello</a></h3>
       </div>
       <hr />
       {% block flashed %}

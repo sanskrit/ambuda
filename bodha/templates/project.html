@@ -5,9 +5,10 @@
 {% block content %}
 <h1>{{ project.name }}</h1>
 
+<p>Created on {{ project.created }}</p>
 <p>{{ project.segments|length }} segments</p>
 
-<a href="{{ url_for('segment_edit', slug=project.slug, id=None) }}" class="btn btn-primary btn-large">
+<a href="{{ url_for('segment_edit', slug=project.slug, id=None) }}" class="btn btn-success btn-large">
     Start editing
 </a>
 
