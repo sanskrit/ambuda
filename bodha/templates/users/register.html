@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<h1>Sign up</h1>
+
+{% macro show(field) %}
+    <div class="control-group">
+        {{ field.label(class='control-label') }}
+        <div class="controls">
+            {{ field }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% set form = register_user_form %}
+<form action="{{ url_for_security('register') }}" method="POST" name="register_user_form" class="form-horizontal">
+    {{ form.csrf_token }}
+    {{ show(form.email) }}
+    {{ show(form.password) }}
+    {{ show(form.password_confirm) }}
+    <div class="controls">
+        {{ form.submit(class='btn btn-primary') }}
+    </div>
+</form>
+
+{% endblock %}

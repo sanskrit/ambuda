@@ -8,10 +8,10 @@
 <div class="jumbotron">
     <h1>Index</h1>
     <p class="lead">Digitize the Sanskrit world in just 5 minutes a day</p>
+    <a href="{{ url_for('security.register') }}" class="btn btn-large btn-success">Sign up and start helping</a>
 </div>
 
 <div class="container">
-
     <h2>1. Choose a project</h2>
     {{ macros.project_list(projects, current_user) }}
 </div>
