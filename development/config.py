@@ -3,6 +3,9 @@ import os
 DEBUG = True
 SECRET_KEY = 'secret'
 
+# flask-assets
+# ------------
+ASSETS_DEST = 'bodha/static'
 
 # flask-security
 # --------------

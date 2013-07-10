@@ -1,10 +1,18 @@
 from flask import Flask
+from flask.ext.assets import Bundle, Environment
 from flask.ext.security import Security, SQLAlchemyUserDatastore
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config.from_object('development.config')
 
+# Assets
+assets = Environment(app)
+assets.url = '/static'
+assets.directory = app.config['ASSETS_DEST']
+
+less = Bundle('less/base.less', filters='less', output='gen/style.css', depends=['a'])
+assets.register('all-css', less)
 
 # Database
 db = SQLAlchemy(app)

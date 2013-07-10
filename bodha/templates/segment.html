@@ -8,14 +8,12 @@
 
 <form method="POST" action="{{ url_for('segment_edit', slug=project.slug, id=segment.id) }}">
     {{ form.csrf_token }}
-    <div class="row">
-        <div class="span6">
-            <img src="{{ images.url(segment.image_path) }}" />
-        </div>
-        <div class="span6">
-            {{ form.content(id='text-input', rows='30', style='width: 100%') }}
-        </div>
-    </div>
+
+    <h2>Image</h2>
+    <div id="img-view"><img src="{{ images.url(segment.image_path) }}" /></div>
+
+    <h2>Text</h2>
+    {{ form.content(id='text-input', rows='30') }}
 
     {% set num_revisions = segment.revisions|length %}
     <p>
