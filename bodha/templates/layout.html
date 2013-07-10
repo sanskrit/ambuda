@@ -36,6 +36,8 @@
         </ul>
         <h3 class="muted"><a href="{{ url_for('index') }}">Hello</a></h3>
       </div>
+    </div>
+    {% block body %}
       <hr />
       {% block flashed %}
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -46,8 +48,10 @@
           {% endfor %}
       {% endwith %}
       {% endblock %}
-      {% block content %}
-      {% endblock %}
-    </div>
+
+      <div class="container">
+        {% block content %}{% endblock %}
+      </div>
+    {% endblock %}
   </body>
 </html>

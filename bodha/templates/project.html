@@ -3,13 +3,12 @@
 
 {% block title %}{{ project.name }}{% endblock %}
 
-{% block content %}
 {% set p = project %}
+{% block content %}
 <h1>{{ p.name }}</h1>
 
 <p>Created on {{ p.created }}</p>
 <p>{{ p.num_segments }} segments</p>
 
 {{ m.project_options(project, current_user, '/') }}
-
 {% endblock %}

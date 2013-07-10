@@ -3,8 +3,7 @@
 
 {% block title %}Index{% endblock %}
 
-{% block content %}
-
+{% block body %}
 <div class="jumbotron">
     <h1>Index</h1>
     <p class="lead">Digitize the Sanskrit world in just 5 minutes a day</p>
@@ -12,7 +11,24 @@
 </div>
 
 <div class="container">
-    <h2>1. Choose a project</h2>
-    {{ macros.project_list(projects, current_user) }}
+<div class="row">
+    <div class="span4">
+        <h2>Projects</h2>
+        <p>Important and uncommon texts in Sanskrit, English, and related languages. None of these texts have electronic versions available online.</p>
+        <a href="#" class="btn btn-large">Read more</a>
+    </div>
+
+    <div class="span4">
+        <h2>Process</h2>
+        <p>Work on one page at a time. Do as much or as little as you like. Many hands make light work, and together, we can bring these texts into the 21st century.</p>
+        <a href="#" class="btn btn-large">Read more</a>
+    </div>
+
+    <div class="span4">
+        <h2>Results</h2>
+        <p>All results are released under the most permissive licenses possible, so that they can endure into future generations.</p>
+        <a href="#" class="btn btn-large">Read more</a>
+    </div>
+</div>
 </div>
 {% endblock %}
