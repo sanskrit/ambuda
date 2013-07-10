@@ -43,8 +43,7 @@ def project(slug):
     try:
         _project = Project.query.filter(Project.slug==slug).one()
     except sqlalchemy.exc.SQLAlchemyError:
-        flash("Sorry, we couldn't find project '%s'." % slug, 'error')
-        return redirect(url_for('project_list'))
+        return missing_project(slug)
 
     return render('project.html', project=_project)
 
