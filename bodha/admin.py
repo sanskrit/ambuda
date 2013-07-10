@@ -37,7 +37,7 @@ class ModelView(AuthMixin, _ModelView):
 # ------------
 class SegmentView(ModelView):
     column_list = form_excluded_columns = ('id', 'project', 'image_path',
-                                           'status')
+                                           'status_id')
 
 
 class UserView(ModelView):

@@ -12,6 +12,7 @@ from bodha.models import *
 
 images = UploadSet('img', IMAGES)
 GET_POST = ['GET', 'POST']
+STATUS = {}
 
 
 @app.context_processor
@@ -21,6 +22,14 @@ def upload_sets():
     }
 
 
+@app.before_first_request
+def status_enum():
+    for s in Status.query.all():
+        STATUS[s.name] = s
+
+
+# Helper functions
+# ~~~~~~~~~~~~~~~~
 def missing_project(slug):
     flash("Sorry, we couldn't find \"%s\"." % slug, 'error')
     return redirect(url_for('project_list'))
@@ -80,12 +89,18 @@ def segment_edit(slug, id=None):
         form.content.data = _segment.revisions[-1].content
 
     if form.validate_on_submit() and _segment is not None:
+        # Create a new revision. `index` is populated automatically.
         rev = Revision(
             content=form.content.data,
             status_id=None,
             segment_id=_segment.id
         )
         _segment.revisions.append(rev)
+
+        # If marked as complete, change the segment status
+        if form.complete.data:
+            pass  # TODO
+
         db.session.commit()
         flash('Saved!', 'success')
 

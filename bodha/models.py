@@ -52,21 +52,37 @@ class Project(Base):
         return self.slug
 
     @property
+    def num_proofreading(self):
+        return self.q_segments(Segment.status_id.in_([None, 0, 1])).count()
+
+    @property
+    def num_formatting(self):
+        return self.q_segments(Segment.status_id.in_([0, 1])).count()
+
+    @property
+    def num_complete(self):
+        return self.q_segments(Segment.status_id.in_([0, 1])).count()
+
+    @property
     def num_segments(self):
-        return Segment.query.filter(Segment.project_id==self.id).count()
+        return self.q_segments().count()
+
+    def q_segments(self, _filter=None):
+        query = Segment.query.filter(Segment.project_id==self.id)
+        if _filter is not None:
+            query = query.filter(_filter)
+        return query
 
 
 class Segment(Base):
     #: Filepath to the corresponding image
     image_path = db.Column(db.String, unique=True)
-    #: Number of times marked complete
-    num_completions = db.Column(db.Integer, default=0)
     #: Time created
     created = db.Column(db.DateTime, default=datetime.utcnow)
     #: The corresponding `Project`
     project_id = db.Column(db.ForeignKey('project.id'), index=True)
     #: Project status
-    status_id = db.Column(db.ForeignKey('status.id'))
+    status_id = db.Column(db.ForeignKey('status.id'), index=True)
 
     project = db.relationship('Project', backref='segments')
     status = db.relationship('Status', backref='segments')
