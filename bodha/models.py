@@ -71,6 +71,7 @@ class Segment(Base):
     project = db.relationship('Project', backref='segments')
     status = db.relationship('Status', backref='segments')
     revisions = db.relationship('Revision', backref='segment',
+                                order_by='Revision.index',
                                 collection_class=ordering_list('index'))
 
     def __unicode__(self):

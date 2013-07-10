@@ -85,7 +85,7 @@ def segment_edit(slug, id=None):
             status_id=None,
             segment_id=_segment.id
         )
-        db.session.add(rev)
+        _segment.revisions.append(rev)
         db.session.commit()
         flash('Saved!', 'success')
 
