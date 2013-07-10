@@ -31,3 +31,7 @@ import admin
 
 # Endpoints
 import views
+
+
+# Setup
+import setup

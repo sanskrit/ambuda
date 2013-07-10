@@ -88,7 +88,7 @@ def segment_edit(slug, id=None):
         )
         db.session.add(rev)
         db.session.commit()
-        return redirect(url_for('segment_edit', slug=_project.slug))
+        flash('Saved!', 'success')
 
     return render('segment.html', form=form,
                   project=_project,
