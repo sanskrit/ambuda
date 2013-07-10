@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% import 'macros.html' as m %}
 
 {% block title %}{{ project.name }}{% endblock %}
 
@@ -8,8 +9,6 @@
 <p>Created on {{ project.created }}</p>
 <p>{{ project.segments|length }} segments</p>
 
-<a href="{{ url_for('segment_edit', slug=project.slug, id=None) }}" class="btn btn-success btn-large">
-    Start editing
-</a>
+{{ m.project_options(project, current_user, '/') }}
 
 {% endblock %}
