@@ -51,6 +51,10 @@ class Project(Base):
     def __unicode__(self):
         return self.slug
 
+    @property
+    def num_segments(self):
+        return Segment.query.filter(Segment.project_id==self.id).count()
+
 
 class Segment(Base):
     #: Filepath to the corresponding image

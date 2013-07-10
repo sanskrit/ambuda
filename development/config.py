@@ -12,9 +12,9 @@ ASSETS_DEST = 'bodha/static'
 SECURITY_PASSWORD_HASH = 'bcrypt'
 SECURITY_PASSWORD_SALT = '$2a$10$WyxRXkzAICMHgmqhMGTlJu'
 SECURITY_CHANGEABLE = True
-SECURITY_CHANGE_URL = '/change'
 SECURITY_REGISTERABLE = True
-
+SECURITY_CHANGE_URL = '/change'
+SECURITY_LOGIN_USER_TEMPLATE = 'users/login.html'
 
 # flask-sqlalchemy
 # ----------------

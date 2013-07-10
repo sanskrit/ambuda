@@ -3,25 +3,16 @@
 
 {% block title %}Index{% endblock %}
 
-{% block style %}
-.jumbotron {
-    margin: 60px 0;
-    text-align: center;
-}
-.jumbotron h1 {
-    font-size: 72px;
-    line-height: 1;
-}
-{% endblock %}
-
 {% block content %}
 
-<div class="container">
-    <div class="jumbotron">
-        <h1>Index</h1>
-    </div>
+<div class="jumbotron">
+    <h1>Index</h1>
+    <p class="lead">Digitize the Sanskrit world in just 5 minutes a day</p>
+</div>
 
-    <h1>1. Choose a project</h1>
+<div class="container">
+
+    <h2>1. Choose a project</h2>
     {{ macros.project_list(projects, current_user) }}
 </div>
 {% endblock %}

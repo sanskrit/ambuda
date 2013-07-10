@@ -11,7 +11,7 @@ assets = Environment(app)
 assets.url = '/static'
 assets.directory = app.config['ASSETS_DEST']
 
-less = Bundle('less/base.less', filters='less', output='gen/style.css', depends=['a'])
+less = Bundle('less/base.less', filters='less', output='gen/style.css')
 assets.register('all-css', less)
 
 # Database

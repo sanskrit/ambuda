@@ -1,8 +1,9 @@
 {# Link to a project's edit page #}
 {% macro edit_project(p, user, url) %}
     {% if user.can_edit and user.can_edit(p) %}
-        <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit</a>
-        <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload</a>
+        <a href="{{ url_for('segment_edit', slug=p.slug) }}" class="btn btn-success">Start editing</a>
+        <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit project</a>
+        <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload segments</a>
     {% endif %}
 {% endmacro %}
 
@@ -12,6 +13,7 @@
     {% for p in projects %}
         <li>
             <h3><a href="{{ url_for('project', slug=p.slug) }}">{{ p.name }}</a></h3>
+            <p>{{ p.num_segments }} segments</p>
             {{ edit_project(p, user, url_for('project_list')) }}
         </li>
     {% endfor %}
