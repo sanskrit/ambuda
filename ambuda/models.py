@@ -40,7 +40,7 @@ class Project(Base):
     #: How the project appears in URLs
     slug = db.Column(db.String(30), unique=True)
     #: Path to an instructions template
-    instructions = db.Column(db.String, unique=True)
+    instructions = db.Column(db.String)
     #: Time created
     created = db.Column(db.DateTime, default=datetime.utcnow)
     #: Project status

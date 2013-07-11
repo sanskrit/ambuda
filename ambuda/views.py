@@ -51,6 +51,11 @@ def about():
     return render('about.html')
 
 
+@app.route('/how-to/proofread')
+def proofreading():
+    return render('how-to/proofread.html')
+
+
 @app.route('/projects/')
 def project_list():
     projects = Project.query.all()

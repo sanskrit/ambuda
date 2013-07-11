@@ -7,8 +7,9 @@
 {% block content %}
 <h1>{{ p.name }}</h1>
 
-<p>Created on {{ p.created }}</p>
-<p>{{ p.num_segments }} segments</p>
+<h2>About the project</h2>
 
-{{ m.project_options(project, current_user, '/') }}
+<h2>Before you start</h2>
+<p class="alert alert-warning">Make sure you've read over the <a href="{{ url_for('proofreading') }}">proofreading guidelines</a>. They're basic, but they're also very important!</p>
+<a href="{{ url_for('segment_edit', slug=p.slug) }}" class="btn btn-primary btn-large btn-block">Start helping</a>
 {% endblock %}
