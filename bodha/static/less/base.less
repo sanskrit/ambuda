@@ -1,6 +1,32 @@
 @view-height: 400px;
+@footer-height: 60px;
 @gray: #ddd;
 
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -@footer-height;
+}
+
+#push, footer {
+    height: @footer-height;
+}
+
+h2 {
+    font-weight: normal;
+}
+
+footer {
+    background: #f5f5f5;
+    line-height: @footer-height;
+}
 
 .jumbotron {
     background: #333;

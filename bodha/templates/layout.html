@@ -12,46 +12,52 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/markdown.js') }}"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="masthead">
-        <ul class="nav nav-pills pull-right">
-          <li><a href="{{ url_for('project_list') }}">Projects</a></li>
-          {% if current_user.has_role('admin') %}<li><a href="{{ url_for('admin.index') }}">Admin</a></li>{% endif %}
-          <li>
-          {% if current_user.is_authenticated() %}
-          <ul class="nav nav-pills">
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ current_user.email }}
+    <div id="wrap">
+      <div class="container">
+        <div class="masthead">
+          <ul class="nav nav-pills pull-right">
+            <li><a href="{{ url_for('project_list') }}">Projects</a></li>
+            {% if current_user.has_role('admin') %}<li><a href="{{ url_for('admin.index') }}">Admin</a></li>{% endif %}
+            <li>
+            {% if current_user.is_authenticated() %}
+            <ul class="nav nav-pills">
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ current_user.email }}
                 <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="{{ url_for('security.logout') }}">Log out</a></li>
-              </ul>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{ url_for('security.logout') }}">Log out</a></li>
+                </ul>
+              </li>
+            </ul>
+            {% else %}
+            <a href="{{ url_for('security.login') }}">Log in</a>
+            {% endif %}
             </li>
           </ul>
-          {% else %}
-            <a href="{{ url_for('security.login') }}">Log in</a>
-          {% endif %}
-          </li>
-        </ul>
-        <h3 class="muted"><a href="{{ url_for('index') }}">Hello</a></h3>
+          <h3 class="muted"><a href="{{ url_for('index') }}">Hello</a></h3>
+        </div>
       </div>
-    </div>
-    {% block body %}
-      <hr />
-      {% block flashed %}
-      {% with messages = get_flashed_messages(with_categories=true) %}
-          {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">
-            {{ message }}
-          </div>
-          {% endfor %}
-      {% endwith %}
-      {% endblock %}
+      {% block body %}
+        <hr />
+        {% block flashed %}
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endwith %}
+        {% endblock %}
 
-      <div class="container">
-        {% block content %}{% endblock %}
+        <div class="container">
+          {% block content %}{% endblock %}
       </div>
-    {% endblock %}
+      {% endblock %}
+      <div id="push"></div>
+    </div>
+    <footer>
+      <div class="container">
+        Created by <a href="http://learnsanskrit.org">learnsanskrit.org</a>
+      </div>
+    </footer>
   </body>
 </html>
