@@ -41,6 +41,11 @@ def index():
     return render('index.html', projects=projects)
 
 
+@app.route('/about')
+def about():
+    return render('about.html')
+
+
 @app.route('/projects/')
 def project_list():
     projects = Project.query.all()
