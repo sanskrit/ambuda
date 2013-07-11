@@ -4,8 +4,8 @@ from flask.ext.admin import (Admin, BaseView as _BaseView, AdminIndexView,
 from flask.ext.admin.contrib.sqlamodel import ModelView as _ModelView
 from flask.ext.security import current_user
 
-from bodha import app, db
-from bodha import models
+from ambuda import app, db
+from ambuda import models
 
 
 # Base classes

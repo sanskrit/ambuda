@@ -1,13 +1,14 @@
 import random
 
 import sqlalchemy.exc
-from flask import flash, redirect, render_template as render, request, url_for
+from flask import flash, redirect, render_template as render, url_for
+from flask.ext.security import current_user
 from flask.ext.security.decorators import roles_required
 from flask.ext.uploads import configure_uploads, UploadSet, IMAGES
 
-from bodha import app, db
-from bodha.forms import ImagesForm, SegmentEditForm
-from bodha.models import *
+from ambuda import app, db
+from ambuda.forms import ImagesForm, SegmentEditForm
+from ambuda.models import *
 
 
 images = UploadSet('img', IMAGES)
@@ -37,8 +38,12 @@ def missing_project(slug):
 
 @app.route('/')
 def index():
-    projects = Project.query.all()
-    return render('index.html', projects=projects)
+    if current_user.is_authenticated():
+        projects = Project.query.all()
+        return render('index-user.html', projects=projects)
+    else:
+        projects = Project.query.all()
+        return render('index-splash.html')
 
 
 @app.route('/about')

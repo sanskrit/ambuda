@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    bodha.models
+    ambuda.models
     ~~~~~~~~~~~~
 
     Models for a Wiki-like interface
@@ -15,7 +15,7 @@ from flask.ext.security import UserMixin, RoleMixin
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.ext.orderinglist import ordering_list
 
-from bodha import db
+from ambuda import db
 
 
 class Base(db.Model):

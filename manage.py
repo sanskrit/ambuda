@@ -1,6 +1,6 @@
 from flask.ext.script import Manager
 import flask.ext.security.script as sec
-from bodha import app
+from ambuda import app
 
 manager = Manager(app)
 manager.add_command('create_user', sec.CreateUserCommand())

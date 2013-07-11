@@ -1,5 +1,5 @@
-from bodha import app, db
-from bodha.models import Status
+from ambuda import app, db
+from ambuda.models import Status
 
 
 @app.before_first_request

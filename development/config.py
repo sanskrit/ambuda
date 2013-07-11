@@ -5,7 +5,7 @@ SECRET_KEY = 'secret'
 
 # flask-assets
 # ------------
-ASSETS_DEST = 'bodha/static'
+ASSETS_DEST = 'ambuda/static'
 
 # flask-security
 # --------------
@@ -25,4 +25,4 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
 
 # Uploads
 # ~~~~~~~
-UPLOADS_DEFAULT_DEST = os.path.expanduser('~/www/bodha/data')
+UPLOADS_DEFAULT_DEST = os.path.expanduser('~/www/ambuda/data')

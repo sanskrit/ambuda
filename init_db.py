@@ -1,5 +1,5 @@
-from bodha import db
-from bodha.models import *
+from ambuda import db
+from ambuda.models import *
 
 
 def main():
