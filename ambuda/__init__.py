@@ -1,5 +1,6 @@
 from flask import Flask
 from flask.ext.assets import Bundle, Environment
+from flask.ext.markdown import Markdown
 from flask.ext.security import Security, SQLAlchemyUserDatastore
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -18,6 +19,11 @@ assets.register('all-css', less)
 db = SQLAlchemy(app)
 import models
 db.create_all()
+
+
+
+# Markdown
+Markdown(app)
 
 
 # Security

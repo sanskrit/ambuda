@@ -39,8 +39,10 @@ class Project(Base):
     name = db.Column(db.String)
     #: How the project appears in URLs
     slug = db.Column(db.String(30), unique=True)
-    #: Path to an instructions template
-    instructions = db.Column(db.String)
+    #: Introduction to the project
+    introduction = db.deferred(db.Column(db.Text), group='markdown')
+    #: Instructions
+    instructions = db.deferred(db.Column(db.Text), group='markdown')
     #: Time created
     created = db.Column(db.DateTime, default=datetime.utcnow)
     #: Project status
@@ -128,6 +130,12 @@ class User(Base, UserMixin):
 
     roles = db.relationship('Role', secondary='user_role_assoc',
                             backref='users')
+
+    def __repr__(self):
+        return '<User(%s,%s)>' % (self.id, self.email)
+
+    def __unicode__(self):
+        return self.email
 
     def can_edit(self, project):
         return self.is_admin()

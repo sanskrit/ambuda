@@ -35,6 +35,10 @@ class ModelView(AuthMixin, _ModelView):
 
 # Custom views
 # ------------
+class ProjectView(ModelView):
+    column_list = ['id', 'name', 'slug', 'created']
+
+
 class SegmentView(ModelView):
     column_list = form_excluded_columns = ('id', 'project', 'image_path',
                                            'status_id')
@@ -48,9 +52,9 @@ class UserView(ModelView):
 # -----------
 admin = Admin(name='Index', index_view=AppIndexView())
 
-admin.add_view(ModelView(models.Project, db.session,
-                         category='Projects',
-                         name='Project list'))
+admin.add_view(ProjectView(models.Project, db.session,
+                           category='Projects',
+                           name='Project list'))
 admin.add_view(SegmentView(models.Segment, db.session,
                            category='Projects',
                            name='Segments'))
