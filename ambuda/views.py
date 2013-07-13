@@ -39,8 +39,7 @@ def missing_project(slug):
 @app.route('/')
 def index():
     if current_user.is_authenticated():
-        projects = Project.query.all()
-        return render('index-user.html', projects=projects)
+        return render('index-user.html')
     else:
         return render('index-splash.html')
 

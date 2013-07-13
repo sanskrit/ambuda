@@ -1,9 +1,7 @@
 {# Link to a project's edit page #}
 {% macro project_options(p, user, url) %}
-    {% if user.can_edit and user.can_edit(p) %}
+    {% if user.is_authenticated() %}
         <a href="{{ url_for('project', slug=p.slug) }}" class="btn btn-primary btn-large">Go to project &raquo;</a>
-        <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit project</a>
-        <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload segments</a>
     {% else %}
         <a href="{{ url_for('security.register') }}" class="btn btn-primary">Sign up and start helping</a>
     {% endif %}

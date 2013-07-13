@@ -8,6 +8,24 @@ html, body {
     margin: 0;
 }
 
+/* Fix strange bootstrap bug */
+select, textarea, input[type="text"], input[type="password"],
+input[type="datetime"], input[type="datetime-local"], input[type="date"],
+input[type="month"], input[type="time"], input[type="week"],
+input[type="number"], input[type="email"], input[type="url"], input[type="search"],
+input[type="tel"], input[type="color"], .uneditable-input {
+    height: auto;
+}
+
+h2 {
+    font-weight: normal;
+}
+
+footer {
+    background: #f5f5f5;
+    line-height: @footer-height;
+}
+
 #wrap {
     min-height: 100%;
     height: auto !important;
@@ -19,14 +37,6 @@ html, body {
     height: @footer-height;
 }
 
-h2 {
-    font-weight: normal;
-}
-
-footer {
-    background: #f5f5f5;
-    line-height: @footer-height;
-}
 
 .jumbotron {
     background: #333;

@@ -7,9 +7,23 @@
 {% block content %}
 <h1>{{ p.name }}</h1>
 
-<h2>Stats</h2>
+{% if current_user.can_edit and current_user.can_edit(p) %}
+<div class="well">
+    <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit project</a>
+    <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload segments</a>
+</div>
+{% endif %}
+
+<div class="well">
+{{ p.introduction|markdown }}
+</div>
 
 <h2>Before you start</h2>
 <p class="alert alert-warning">Make sure you've read over the <a href="{{ url_for('proofreading') }}">proofreading guidelines</a>. They're basic, but they're also very important!</p>
+
+<article id="instructions" class="well">
+    {{ p.instructions|markdown }}
+</article>
+
 <a href="{{ url_for('segment_edit', slug=p.slug) }}" class="btn btn-primary btn-large btn-block">Start helping</a>
 {% endblock %}

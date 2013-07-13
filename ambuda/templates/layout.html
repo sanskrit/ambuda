@@ -40,15 +40,15 @@
       </div>
       {% block body %}
         <hr />
-        {% block flashed %}
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-          {% endwith %}
-        {% endblock %}
 
         <div class="container">
+          {% block flashed %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            {% endwith %}
+          {% endblock %}
           {% block content %}{% endblock %}
       </div>
       {% endblock %}
