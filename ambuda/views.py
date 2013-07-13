@@ -42,7 +42,6 @@ def index():
         projects = Project.query.all()
         return render('index-user.html', projects=projects)
     else:
-        projects = Project.query.all()
         return render('index-splash.html')
 
 

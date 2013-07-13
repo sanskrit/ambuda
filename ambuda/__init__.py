@@ -29,6 +29,12 @@ security = Security(app, datastore)
 import admin
 
 
+# Debug toolbar
+if app.config['DEBUG']:
+    from flask.ext.debugtoolbar import DebugToolbarExtension as DTE
+    toolbar = DTE(app)
+
+
 # Endpoints
 import views
 
