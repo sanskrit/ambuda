@@ -24,4 +24,4 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
 
 # Uploads
 # ~~~~~~~
-UPLOADS_DEFAULT_DEST = os.path.expanduser('~/www/ambuda/data')
+UPLOADS_DEFAULT_DEST = os.path.expanduser('~/projects/ambuda/data')

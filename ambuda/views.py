@@ -1,4 +1,6 @@
+import os
 import random
+from zipfile import ZipFile
 
 import sqlalchemy.exc
 from flask import flash, redirect, render_template as render, url_for
@@ -38,6 +40,8 @@ def missing_project(slug):
 
 @app.route('/')
 def index():
+    print images.__dict__
+    print images.default_dest
     if current_user.is_authenticated():
         return render('index-user.html')
     else:
@@ -125,6 +129,12 @@ def segment_edit(slug, id=None):
 @app.route('/projects/<slug>/upload', methods=['GET', 'POST'])
 @roles_required('admin')
 def upload_segments(slug):
+    """
+    Upload segments to the given project. Segments are bundled in a
+    single zip file.
+
+    :param slug: the project slug
+    """
     try:
         _project = Project.query.filter(Project.slug==slug).one()
     except sqlalchemy.exc.SQLAlchemyError:
@@ -132,9 +142,14 @@ def upload_segments(slug):
 
     form = ImagesForm()
     if form.validate_on_submit():
-        file_objs = form.path.raw_data
-        filenames = [images.save(f, folder=_project.slug) for f in file_objs]
+        z = ZipFile(form.path.data)
 
+        # Extract all images to <images>/<slug>
+        dir_path = images.path(slug)
+        z.extractall(dir_path)
+
+        # Create `Segment` objects for each image.
+        filenames = [os.path.join(slug, f) for f in z.namelist()]
         for name in filenames:
             db.session.add(Segment(
                 image_path=name,
@@ -143,12 +158,9 @@ def upload_segments(slug):
             ))
         db.session.commit()
 
-        flash('Uploaded %s images.' % len(file_objs))
-        success = True
-    else:
-        success = False
-    return render('upload-segments.html', form=form,
-                  success=success)
+        flash('Uploaded %s images.' % len(filenames))
+
+    return render('upload-segments.html', form=form)
 
 
 configure_uploads(app, (images,))

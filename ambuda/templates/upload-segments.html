@@ -2,7 +2,7 @@
 {% block content %}
 <form enctype="multipart/form-data" method="POST" class="form-horizontal">
     {{ form.csrf_token }}
-    {{ form.path.label }} {{ form.path(multiple='multiple') }}
+    {{ form.path.label }} {{ form.path }}
     <input type="submit" class="btn btn-primary" value="Submit"></input>
 </form>
 {% endblock %}
