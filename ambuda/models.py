@@ -16,6 +16,7 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.ext.orderinglist import ordering_list
 
 from ambuda import db
+from ambuda.lib.enum import DeclEnum
 
 
 class Base(db.Model):
@@ -27,11 +28,13 @@ class Base(db.Model):
         return cls.__name__.lower()
 
 
-class Status(Base):
-    name = db.Column(db.String)
-
-    def __unicode__(self):
-        return self.name
+class Status(DeclEnum):
+    hidden = 'H', 'Hidden'
+    proofreading_1 = 'P1', 'Proofreading (1)'
+    proofreading_2 = 'P2', 'Proofreading (2)'
+    formatting_1 = 'F1', 'Formatting (1)'
+    formatting_2 = 'F2', 'Formatting (2)'
+    complete = 'C', 'Complete'
 
 
 class Project(Base):
@@ -46,24 +49,10 @@ class Project(Base):
     #: Time created
     created = db.Column(db.DateTime, default=datetime.utcnow)
     #: Project status
-    status_id = db.Column(db.ForeignKey('status.id'))
-
-    status = db.relationship('Status', backref='projects')
+    status = db.Column(Status.db_type())
 
     def __unicode__(self):
         return self.slug
-
-    @property
-    def num_proofreading(self):
-        return self.q_segments(Segment.status_id.in_([None, 0, 1])).count()
-
-    @property
-    def num_formatting(self):
-        return self.q_segments(Segment.status_id.in_([0, 1])).count()
-
-    @property
-    def num_complete(self):
-        return self.q_segments(Segment.status_id.in_([0, 1])).count()
 
     @property
     def num_segments(self):
@@ -84,10 +73,9 @@ class Segment(Base):
     #: The corresponding `Project`
     project_id = db.Column(db.ForeignKey('project.id'), index=True)
     #: Project status
-    status_id = db.Column(db.ForeignKey('status.id'), index=True)
+    status = db.Column(Status.db_type(), index=True)
 
     project = db.relationship('Project', backref='segments')
-    status = db.relationship('Status', backref='segments')
     revisions = db.relationship('Revision', backref='segment',
                                 order_by='Revision.index',
                                 collection_class=ordering_list('index'))
@@ -108,10 +96,9 @@ class Revision(Base):
     #: The corresponding `Segment`
     segment_id = db.Column(db.ForeignKey('segment.id'), index=True)
     #: Project status
-    status_id = db.Column(db.ForeignKey('status.id'))
+    status = db.Column(Status.db_type())
 
     # -- 'Segment' backref is addressed above.
-    status = db.relationship('Status', backref='revisions')
     user = db.relationship('User', backref='revisions')
 
 

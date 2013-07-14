@@ -2,7 +2,12 @@ from flask import redirect
 from flask.ext.admin import (Admin, BaseView as _BaseView, AdminIndexView,
                              expose)
 from flask.ext.admin.contrib.sqlamodel import ModelView as _ModelView
+from flask.ext.admin.contrib.sqlamodel.form import AdminModelConverter
+from flask.ext.admin.model.form import converts
 from flask.ext.security import current_user
+
+from wtforms import fields
+from wtforms.validators import ValidationError
 
 from ambuda import app, db
 from ambuda import models
@@ -25,23 +30,59 @@ class AppIndexView(AdminIndexView):
             return redirect('/')
 
 
+class EnumSelectField(fields.SelectField):
+    def __init__(self, model, **kw):
+        super(EnumSelectField, self).__init__(**kw)
+        self.model = model
+        self.coerce = lambda x: x
+
+    @property
+    def data(self):
+        return self.model.from_string(self._data)
+
+    @data.setter
+    def data(self, data):
+        self._data = data.value
+
+    def iter_choices(self):
+        for key, description in self.model:
+            yield (key, description, key == self._data)
+
+    def process_formdata(self, valuelist):
+        self._data = valuelist[0]
+
+    def pre_validate(self, form):
+        if self.data is not None:
+            for key, description in self.model:
+                if self._data == key:
+                    break
+            else:
+                raise ValidationError(self.gettext(u'Not a valid choice'))
+
+
+class ModelConverter(AdminModelConverter):
+
+    @converts('DeclEnumType')
+    def conv_DeclEnumType(self, column, field_args, **extra):
+        return EnumSelectField(model=column.type.enum, **field_args)
+
+
 class BaseView(AuthMixin, _BaseView):
     pass
 
 
 class ModelView(AuthMixin, _ModelView):
-    pass
+    model_form_converter = ModelConverter
 
 
 # Custom views
 # ------------
 class ProjectView(ModelView):
-    column_list = ['id', 'name', 'slug', 'created']
+    column_list = ['id', 'name', 'slug', 'status', 'created']
 
 
 class SegmentView(ModelView):
-    column_list = form_excluded_columns = ('id', 'project', 'image_path',
-                                           'status_id')
+    column_list = ('id', 'project', 'image_path', 'status')
 
 
 class UserView(ModelView):

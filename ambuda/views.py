@@ -25,12 +25,6 @@ def upload_sets():
     }
 
 
-@app.before_first_request
-def status_enum():
-    for s in Status.query.all():
-        STATUS[s.name] = s
-
-
 # Helper functions
 # ~~~~~~~~~~~~~~~~
 def missing_project(slug):
@@ -154,7 +148,7 @@ def upload_segments(slug):
             db.session.add(Segment(
                 image_path=name,
                 project_id=_project.id,
-                status_id=None
+                status=Status.proofreading_1
             ))
         db.session.commit()
 
