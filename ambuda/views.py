@@ -33,6 +33,41 @@ def missing_project(slug):
     return redirect(url_for('project_list'))
 
 
+def get_project(slug):
+    """Fetch a project.
+
+    :param slug: the project slug
+    """
+    try:
+        return Project.query.filter(Project.slug==slug).one()
+    except sqlalchemy.exc.SQLAlchemyError:
+        return None
+
+
+def get_segment(project_id, id):
+    """Fetch a segment.
+
+    :param project_id:
+    :param id:
+    """
+    try:
+        return Segment.query.filter(Segment.id==id).one()
+    except sqlalchemy.exc.SQLAlchemyError:
+        return None
+
+
+def random_segment(project_id):
+    """Fetch a random segment from the project.
+
+    :param project_id: the project ID
+    """
+    q = Segment.query.filter(Segment.project_id==project_id)
+    count = q.count()
+    return q.offset(random.randrange(count)).first()
+
+
+# View functions
+# ~~~~~~~~~~~~~~
 @app.route('/')
 def index():
     print images.__dict__
@@ -61,55 +96,33 @@ def project_list():
 
 @app.route('/projects/<slug>/')
 def project(slug):
-    try:
-        _project = Project.query.filter(Project.slug==slug).one()
-    except sqlalchemy.exc.SQLAlchemyError:
+    _project = get_project(slug)
+    if _project is None:
         return missing_project(slug)
 
     return render('project.html', project=_project)
 
 
-def random_segment(project_id):
-    """Fetch a random segment from the project.
-
-    :param project_id: the project ID
-    """
-    q = Segment.query.filter(Segment.project_id==project_id)
-    count = q.count()
-    return q.offset(random.randrange(count)).first()
-
-
-def segment_data(project_id, id=None):
-    """
-
-    :param project_id:
-    :param id:
-    """
-    try:
-        return Segment.query.filter(Segment.id==id).one()
-    except sqlalchemy.exc.SQLAlchemyError:
-        return None
-
-
 @app.route('/projects/<slug>/edit/', methods=GET_POST)
 @app.route('/projects/<slug>/edit/<int:id>', methods=GET_POST)
 def segment_edit(slug, id=None):
-    try:
-        _project = Project.query.filter(Project.slug==slug).one()
-    except sqlalchemy.exc.SQLAlchemyError:
+    _project = get_project(slug)
+    if _project is None:
         return missing_project(slug)
 
     if id is None:
         new_id = random_segment(_project.id).id
         return redirect(url_for('segment_edit', slug=slug, id=new_id))
 
-    _segment = segment_data(_project.id, id)
+    _segment = get_segment(_project.id, id)
+    if _segment is None:
+        return redirect(url_for('project', slug=slug))
 
     form = SegmentEditForm()
     if _segment.revisions:
         form.content.data = _segment.revisions[-1].content
 
-    if form.validate_on_submit() and _segment is not None:
+    if form.validate_on_submit():
         # Create a new revision. `index` is populated automatically.
         new_status = Status.next(_segment.status)
         rev = Revision(
@@ -142,9 +155,8 @@ def upload_segments(slug):
 
     :param slug: the project slug
     """
-    try:
-        _project = Project.query.filter(Project.slug==slug).one()
-    except sqlalchemy.exc.SQLAlchemyError:
+    _project = get_project(slug)
+    if _project is None:
         return missing_project(slug)
 
     form = ImagesForm()
