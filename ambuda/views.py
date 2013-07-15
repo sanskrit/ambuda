@@ -21,7 +21,8 @@ STATUS = {}
 @app.context_processor
 def upload_sets():
     return {
-        'images': images
+        'images': images,
+        'Status': Status
     }
 
 
@@ -68,21 +69,26 @@ def project(slug):
     return render('project.html', project=_project)
 
 
+def random_segment(project_id):
+    """Fetch a random segment from the project.
+
+    :param project_id: the project ID
+    """
+    q = Segment.query.filter(Segment.project_id==project_id)
+    count = q.count()
+    return q.offset(random.randrange(count)).first()
+
+
 def segment_data(project_id, id=None):
     """
 
     :param project_id:
     :param id:
     """
-    if id:
-        try:
-            return Segment.query.filter(Segment.id==id).one()
-        except sqlalchemy.exc.SQLAlchemyError:
-            return None
-
-    q = Segment.query.filter(Segment.project_id==project_id)
-    count = q.count()
-    return q.offset(random.randrange(count)).first()
+    try:
+        return Segment.query.filter(Segment.id==id).one()
+    except sqlalchemy.exc.SQLAlchemyError:
+        return None
 
 
 @app.route('/projects/<slug>/edit/', methods=GET_POST)
@@ -93,6 +99,10 @@ def segment_edit(slug, id=None):
     except sqlalchemy.exc.SQLAlchemyError:
         return missing_project(slug)
 
+    if id is None:
+        new_id = random_segment(_project.id).id
+        return redirect(url_for('segment_edit', slug=slug, id=new_id))
+
     _segment = segment_data(_project.id, id)
 
     form = SegmentEditForm()
@@ -101,11 +111,13 @@ def segment_edit(slug, id=None):
 
     if form.validate_on_submit() and _segment is not None:
         # Create a new revision. `index` is populated automatically.
+        new_status = Status.next(_segment.status)
         rev = Revision(
             content=form.content.data,
-            status_id=None,
+            status=new_status,
             segment_id=_segment.id
         )
+        _segment.status = new_status
         _segment.revisions.append(rev)
 
         # If marked as complete, change the segment status

@@ -36,6 +36,31 @@ class Status(DeclEnum):
     formatting_2 = 'F2', 'Formatting (2)'
     complete = 'C', 'Complete'
 
+    HIDDEN = [hidden]
+    PROOFREADING = [proofreading_1, proofreading_2]
+    FORMATTING = [formatting_1, formatting_2]
+    COMPLETE = [complete]
+
+    @classmethod
+    def next(cls, status):
+        """Impose an ordering on the enums
+
+        :param cls: the `Status` class
+        :param status: some `Status` instance
+        """
+        converter = {
+            # Stay in 'hidden' and 'complete'
+            cls.hidden: cls.hidden,
+            cls.complete: cls.complete,
+
+            # Step the rest.
+            cls.proofreading_1: cls.proofreading_2,
+            cls.proofreading_2: cls.formatting_1,
+            cls.formatting_1: cls.formatting_2,
+            cls.formatting_2: cls.complete,
+        }
+        return converter[status]
+
 
 class Project(Base):
     #: Project title
@@ -53,6 +78,9 @@ class Project(Base):
 
     def __unicode__(self):
         return self.slug
+
+    def segs_in(self, status_list):
+        return self.q_segment(Segment.status.in_(status_list))
 
     @property
     def num_segments(self):

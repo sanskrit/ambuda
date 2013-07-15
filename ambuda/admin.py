@@ -42,7 +42,10 @@ class EnumSelectField(fields.SelectField):
 
     @data.setter
     def data(self, data):
-        self._data = data.value
+        if data is None:
+            self._data = None
+        else:
+            self._data = data.value
 
     def iter_choices(self):
         for key, description in self.model:
@@ -79,6 +82,7 @@ class ModelView(AuthMixin, _ModelView):
 # ------------
 class ProjectView(ModelView):
     column_list = ['id', 'name', 'slug', 'status', 'created']
+    form_columns = ['name', 'slug', 'status', 'introduction', 'instructions']
 
 
 class SegmentView(ModelView):
