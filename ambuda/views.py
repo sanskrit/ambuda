@@ -133,13 +133,13 @@ def segment_edit(slug, id=None):
         _segment.status = new_status
         _segment.revisions.append(rev)
 
+        db.session.commit()
+        flash('Saved!', 'success')
+
         # If marked as complete, show a new segment
         if form.complete.data:
             new_id = random_segment(_project.id).id
             return redirect(url_for('segment_edit', slug=slug, id=new_id))
-
-        db.session.commit()
-        flash('Saved!', 'success')
 
     return render('segment.html', form=form,
                   project=_project,
