@@ -1,29 +1,58 @@
 {% extends 'layout.html' %}
 {% import 'macros.html' as m %}
 
+{% macro progress_bar(p) %}
+    {% set num_c = p.segs_in(Status.COMPLETE).count() %}
+    {% set num_f = p.segs_in(Status.FORMATTING).count() %}
+    {% set num_p = p.segs_in(Status.PROOFREADING).count() %}
+    {% set total = num_p + num_f + num_c + 0.0 %}
+    <div class="well">
+        <h2>Stats</h2>
+    <div class="progress">
+        <div class="bar bar-success" style="width:{{ 100 * num_c / total}}%"></div>
+        <div class="bar bar-warning" style="width:{{ 100 * num_f / total}}%"></div>
+        <div class="bar bar-danger" style="width:{{ 100 * num_p / total}}%"></div>
+    </div>
+    <p>
+        <span class="label label-success">{{ num_c }} complete</span>
+        <span class="label label-warning">{{ num_f }} in formatting</span>
+        <span class="label label-important">{{ num_p }} in proofreading</span>
+    </p>
+    </div>
+{% endmacro %}
+
+{% macro buttons(p) %}
+    {% if current_user.can_edit and current_user.can_edit(p) %}
+    <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit project</a>
+    <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload segments</a>
+    {% endif %}
+{% endmacro %}
+
 {% block title %}{{ project.name }}{% endblock %}
 
 {% set p = project %}
 {% block content %}
 <h1>{{ p.name }}</h1>
 
-{% if current_user.can_edit and current_user.can_edit(p) %}
-<div class="well">
-    <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit project</a>
-    <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload segments</a>
-</div>
-{% endif %}
-
-<div class="well">
-{{ p.introduction|markdown }}
+<div class="row">
+    <div class="span8">
+    <h2>Overview</h2>
+        {{ p.introduction|markdown }}
+        {{ buttons(p) }}
+    </div>
+    <div class="span4">
+        {{ progress_bar(p) }}
+    </div>
 </div>
 
 <h2>Before you start</h2>
 <p class="alert alert-warning">Make sure you've read over the <a href="{{ url_for('proofreading') }}">proofreading guidelines</a>. They're basic, but they're also very important!</p>
 
+{% if p.instructions %}
 <article id="instructions" class="well">
     {{ p.instructions|markdown }}
 </article>
+{% endif %}
 
 <a href="{{ url_for('segment_edit', slug=p.slug) }}" class="btn btn-primary btn-large btn-block">Start helping</a>
 {% endblock %}

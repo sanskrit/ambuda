@@ -36,11 +36,6 @@ class Status(DeclEnum):
     formatting_2 = 'F2', 'Formatting (2)'
     complete = 'C', 'Complete'
 
-    HIDDEN = [hidden]
-    PROOFREADING = [proofreading_1, proofreading_2]
-    FORMATTING = [formatting_1, formatting_2]
-    COMPLETE = [complete]
-
     @classmethod
     def next(cls, status):
         """Impose an ordering on the enums
@@ -62,6 +57,12 @@ class Status(DeclEnum):
         return converter[status]
 
 
+Status.HIDDEN = [Status.hidden]
+Status.PROOFREADING = [Status.proofreading_1, Status.proofreading_2]
+Status.FORMATTING = [Status.formatting_1, Status.formatting_2]
+Status.COMPLETE = [Status.complete]
+
+
 class Project(Base):
     #: Project title
     name = db.Column(db.String)
@@ -80,7 +81,7 @@ class Project(Base):
         return self.slug
 
     def segs_in(self, status_list):
-        return self.q_segment(Segment.status.in_(status_list))
+        return self.q_segments(Segment.status.in_(status_list))
 
     @property
     def num_segments(self):

@@ -3,7 +3,7 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-<h1>{{ project.name }}</h1>
+<h1><a href="{{ url_for('project', slug=project.slug) }}">{{ project.name }}</a></h1>
 <hr />
 
 <form method="POST" action="{{ url_for('segment_edit', slug=project.slug, id=segment.id) }}">

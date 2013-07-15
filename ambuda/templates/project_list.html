@@ -1,13 +1,36 @@
 {% extends 'layout.html' %}
 {% import 'macros.html' as macros %}
 
+{# --- Macros --- #}
+{# Link to a project's edit page #}
+{% macro project_options(p, user, url) %}
+    {% if user.is_authenticated() %}
+        <a href="{{ url_for('project', slug=p.slug) }}" class="btn btn-primary btn-large">Go to project &raquo;</a>
+    {% else %}
+        <a href="{{ url_for('security.register') }}" class="btn btn-primary">Sign up and start helping</a>
+    {% endif %}
+{% endmacro %}
+
+{# Show a list of projects. #}
+{% macro project_list(projects, user) %}
+    {% for p in projects %}
+    <section class="well">
+        <h3>{{ p.name }} <span class="label label-important">Step 1: Proofreading</span></h3>
+        {{ p.introduction|markdown }}
+        {{ project_options(p, user, url_for('project_list')) }}
+    </section>
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+{# --- Content --- #}
 {% block title %}Index{% endblock %}
 
 {% block content %}
 <h1>Projects</h1>
 
 {% if projects %}
-{{ macros.project_list(projects, current_user) }}
+{{ project_list(projects, current_user) }}
 {% else %}
 <p>No projects!</p>
 {% endif %}
