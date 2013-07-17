@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% macro another_page() %}
+    <a href="{{ url_for('segment_edit', slug=project.slug) }}" class="btn">Show me another page</a>
+{% endmacro %}
+
 {% block title %}Index{% endblock %}
 
 {% block content %}
@@ -22,9 +26,14 @@
     </p>
 
     <div class="well">
+        {% if segment.status == Status.proofreading_1 %}
         {{ form.in_progress(class='btn btn-primary') }}
-        <a href="{{ url_for('segment_edit', slug=project.slug) }}" class="btn">Show me another page</a>
+        {{ another_page() }}
         {{ form.complete(class='btn btn-danger') }}
+        {% elif segment.status == Status.proofreading_2 %}
+        <p>Another user has marked this page as complete. Read through the text above <strong>carefully</strong> for any mistakes.</p>
+        {{ another_page() }}
+        {% endif %}
     </div>
 </form>
 

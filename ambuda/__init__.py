@@ -15,6 +15,9 @@ assets.directory = app.config['ASSETS_DEST']
 less = Bundle('less/base.less', filters='less', output='gen/style.css')
 assets.register('all-css', less)
 
+js = Bundle('js/ambuda.js', output='gen/scripts.js')
+assets.register('all-js', js)
+
 # Database
 db = SQLAlchemy(app)
 import models
