@@ -70,8 +70,6 @@ def random_segment(project_id):
 # ~~~~~~~~~~~~~~
 @app.route('/')
 def index():
-    print images.__dict__
-    print images.default_dest
     if current_user.is_authenticated():
         return render('index-user.html')
     else:
