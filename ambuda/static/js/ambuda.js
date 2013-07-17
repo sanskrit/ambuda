@@ -8,10 +8,6 @@
         return (mark >= 0x0900 && mark <= 0x097F);
     }
 
-    function transFrom(input, from, to, index) {
-        return input.slice(0, index) + Sanscript.t(input.slice(index+1), from, to);
-    }
-
     function getCaretPosition(el) {
         // Normal browsers
         if (el.selectionStart !== undefined) {
@@ -81,13 +77,13 @@
                 if (keyCode == KEY_SPACE && last.length > 1) {
                     var index = last.indexOf('#');
                     if (index != -1) {
-                        last = transFrom(last, INPUT, 'devanagari', index);
+                        last = last.slice(0, index) + Sanscript.t(last.slice(index+1), INPUT, 'devanagari');
                         changed = true;
                     } else {
                         index = last.indexOf('@');
                         if (index != -1) {
-                        last = transFrom(last, INPUT, 'iast', index);
-                            last = '[sa: ' + last + ']';
+                            var trans = Sanscript.t(last.slice(index+1), INPUT, 'iast');
+                            last = last.slice(0, index) + '[sa: ' + trans + ']';
                             changed = true;
                         }
                     }
