@@ -1,9 +1,15 @@
 (function(ns) {
-    var INPUT = 'hk';
+    var INPUT = 'hk',
+        KEY_SPACE = 32,
+        KEY_BACKSPACE = 8;
 
     function hasDevanagari(data) {
         var mark = data.charCodeAt(data.length - 1);
         return (mark >= 0x0900 && mark <= 0x097F);
+    }
+
+    function transFrom(input, from, to, index) {
+        return input.slice(0, index) + Sanscript.t(input.slice(index+1), from, to);
     }
 
     function getCaretPosition(el) {
@@ -62,7 +68,7 @@
     ns.smartKeydown = function(e) {
         var keyCode = e.keyCode;
         // Space and backspace
-        if (keyCode === 32 || keyCode === 8) {
+        if (keyCode === KEY_SPACE || keyCode === KEY_BACKSPACE) {
             var $this = $(this),
                 before = $this.beforeCaret(),
                 tokens = before.split(' ');
@@ -72,22 +78,32 @@
                     changed = false;
 
                 // Space
-                if (keyCode == 32 && last.length > 1) {
-                    var mark = last.charAt(0);
-                    if (mark == '#') {
-                        last = Sanscript.t(last.substr(1), INPUT, 'devanagari');
+                if (keyCode == KEY_SPACE && last.length > 1) {
+                    var index = last.indexOf('#');
+                    if (index != -1) {
+                        last = transFrom(last, INPUT, 'devanagari', index);
                         changed = true;
-                    } else if (mark == '@') {
-                        last = Sanscript.t(last.substr(1), INPUT, 'iast');
-                        last = '[sa: ' + last + ']';
-                        changed = true;
+                    } else {
+                        index = last.indexOf('@');
+                        if (index != -1) {
+                        last = transFrom(last, INPUT, 'iast', index);
+                            last = '[sa: ' + last + ']';
+                            changed = true;
+                        }
                     }
                 }
 
                 // Backspace
                 else if (hasDevanagari(last)) {
                     e.preventDefault();
-                    last = '#' + Sanscript.t(last, 'devanagari', INPUT);
+                    var prefix = '',
+                        regexp = /(\s)(\S*)$/,
+                        match = regexp.exec(last);
+                    if (match) {
+                        prefix = last.substring(0, match.index) + match[1];
+                        last = match[2];
+                    }
+                    last = prefix + '#' + Sanscript.t(last, 'devanagari', INPUT);
                     changed = true;
                 }
 
