@@ -17,6 +17,7 @@ assets.register('all-js', js)
 
 datastore = SQLAlchemyUserDatastore(models.db, models.User, models.Role)
 
+
 def create_app(name, config_path):
     app = Flask(name, static_folder='ambuda/static')
     app.config.from_object(config_path)

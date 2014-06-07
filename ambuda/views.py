@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 import sqlalchemy.exc
 from flask import (current_app as app, flash, redirect, render_template as
-                    render, url_for, Blueprint)
+                   render, url_for, Blueprint)
 from flask.ext.security import current_user
 from flask.ext.security.decorators import roles_required
 from flask.ext.uploads import configure_uploads, UploadSet, IMAGES
@@ -19,16 +19,18 @@ STATUS = {}
 
 site = Blueprint('site', __name__, template_folder='templates')
 
+
 @site.context_processor
 def upload_sets():
     return {
-            'images': images,
-            'Status': Status
-            }
-
+        'images': images,
+        'Status': Status
+    }
 
     # Helper functions
 # ~~~~~~~~~~~~~~~~
+
+
 def missing_project(slug):
     flash("Sorry, we couldn't find \"%s\"." % slug, 'error')
     return redirect(url_for('project_list'))
@@ -40,7 +42,7 @@ def get_project(slug):
     :param slug: the project slug
     """
     try:
-        return Project.query.filter(Project.slug==slug).one()
+        return Project.query.filter(Project.slug == slug).one()
     except sqlalchemy.exc.SQLAlchemyError:
         return None
 
@@ -52,7 +54,7 @@ def get_segment(project_id, id):
     :param id:
     """
     try:
-        return Segment.query.filter(Segment.id==id).one()
+        return Segment.query.filter(Segment.id == id).one()
     except sqlalchemy.exc.SQLAlchemyError:
         return None
 
@@ -62,7 +64,7 @@ def random_segment(project_id):
 
     :param project_id: the project ID
     """
-    q = Segment.query.filter(Segment.project_id==project_id)
+    q = Segment.query.filter(Segment.project_id == project_id)
     count = q.count()
     return q.offset(random.randrange(count)).first()
 
@@ -125,10 +127,10 @@ def segment_edit(slug, id=None):
         # Create a new revision. `index` is populated automatically.
         new_status = Status.next(_segment.status)
         rev = Revision(
-                content=form.content.data,
-                status=new_status,
-                segment_id=_segment.id
-                )
+            content=form.content.data,
+            status=new_status,
+            segment_id=_segment.id
+        )
         _segment.status = new_status
         _segment.revisions.append(rev)
 
@@ -141,8 +143,8 @@ def segment_edit(slug, id=None):
             return redirect(url_for('segment_edit', slug=slug, id=new_id))
 
     return render('segment.html', form=form,
-            project=_project,
-            segment=_segment)
+                  project=_project,
+                  segment=_segment)
 
 
 @site.route('/projects/<slug>/upload', methods=['GET', 'POST'])
@@ -173,11 +175,9 @@ def upload_segments(slug):
                 image_path=name,
                 project_id=_project.id,
                 status=Status.proofreading_1
-                ))
+            ))
             db.session.commit()
 
         flash('Uploaded %s images.' % len(filenames))
 
     return render('upload-segments.html', form=form)
-
-

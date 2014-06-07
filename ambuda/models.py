@@ -20,6 +20,7 @@ from ambuda.lib.enum import DeclEnum
 
 db = SQLAlchemy()
 
+
 class Base(db.Model):
     __abstract__ = True
     id = db.Column(db.Integer, primary_key=True)
@@ -89,7 +90,7 @@ class Project(Base):
         return self.q_segments().count()
 
     def q_segments(self, _filter=None):
-        query = Segment.query.filter(Segment.project_id==self.id)
+        query = Segment.query.filter(Segment.project_id == self.id)
         if _filter is not None:
             query = query.filter(_filter)
         return query

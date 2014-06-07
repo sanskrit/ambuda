@@ -13,6 +13,8 @@ import models
 
 # Base classes
 # ------------
+
+
 class AuthMixin(object):
 
     def is_accessible(self):
@@ -20,6 +22,7 @@ class AuthMixin(object):
 
 
 class AppIndexView(AdminIndexView):
+
     @expose('/')
     def index(self):
         if current_user.has_role('admin'):
@@ -29,6 +32,7 @@ class AppIndexView(AdminIndexView):
 
 
 class EnumSelectField(fields.SelectField):
+
     def __init__(self, model, **kw):
         super(EnumSelectField, self).__init__(**kw)
         self.model = model
