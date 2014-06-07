@@ -12,12 +12,13 @@ from datetime import datetime
 
 from flask.ext.principal import Permission, RoleNeed
 from flask.ext.security import UserMixin, RoleMixin
+from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.ext.orderinglist import ordering_list
 
-from ambuda import db
 from ambuda.lib.enum import DeclEnum
 
+db = SQLAlchemy()
 
 class Base(db.Model):
     __abstract__ = True

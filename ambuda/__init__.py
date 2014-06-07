@@ -2,15 +2,12 @@ from flask import Flask
 from flask.ext.assets import Bundle, Environment
 from flask.ext.markdown import Markdown
 from flask.ext.security import Security, SQLAlchemyUserDatastore
-from flask.ext.sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.config.from_object('development.config')
+import admin
+import models
+import views
 
-# Assets
-assets = Environment(app)
-assets.url = '/static'
-assets.directory = app.config['ASSETS_DEST']
+assets = Environment()
 
 less = Bundle('less/base.less', filters='less', output='gen/style.css')
 assets.register('all-css', less)
@@ -18,35 +15,34 @@ assets.register('all-css', less)
 js = Bundle('js/ambuda.js', output='gen/scripts.js')
 assets.register('all-js', js)
 
-# Database
-db = SQLAlchemy(app)
-import models
-db.create_all()
+datastore = SQLAlchemyUserDatastore(models.db, models.User, models.Role)
 
+def create_app(name, config_path):
+    app = Flask(name, static_folder='ambuda/static')
+    app.config.from_object(config_path)
 
+    admin.admin.init_app(app)
 
-# Markdown
-Markdown(app)
+    assets.init_app(app)
+    assets.app = app
+    assets.url = '/static'
+    assets.directory = app.config['ASSETS_DEST']
 
+    models.db.init_app(app)
 
-# Security
-datastore = SQLAlchemyUserDatastore(db, models.User, models.Role)
-security = Security(app, datastore)
+    security = Security(app, datastore)
 
+    Markdown(app)
 
-# Admin
-import admin
+    # File uploading
+    views.configure_uploads(app, (views.images,))
 
+    # Debug toolbar
+    if app.config['DEBUG']:
+        from flask.ext.debugtoolbar import DebugToolbarExtension as DTE
+        toolbar = DTE(app)
 
-# Debug toolbar
-if app.config['DEBUG']:
-    from flask.ext.debugtoolbar import DebugToolbarExtension as DTE
-    toolbar = DTE(app)
+    import setup
 
-
-# Endpoints
-import views
-
-
-# Setup
-import setup
+    app.register_blueprint(views.site)
+    return app

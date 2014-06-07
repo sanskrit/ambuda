@@ -1,17 +1,15 @@
-from flask import redirect
+from flask import current_app as app, redirect
 from flask.ext.admin import (Admin, BaseView as _BaseView, AdminIndexView,
                              expose)
-from flask.ext.admin.contrib.sqlamodel import ModelView as _ModelView
-from flask.ext.admin.contrib.sqlamodel.form import AdminModelConverter
+from flask.ext.admin.contrib.sqla import ModelView as _ModelView
+from flask.ext.admin.contrib.sqla.form import AdminModelConverter
 from flask.ext.admin.model.form import converts
 from flask.ext.security import current_user
 
 from wtforms import fields
 from wtforms.validators import ValidationError
 
-from ambuda import app, db
-from ambuda import models
-
+import models
 
 # Base classes
 # ------------
@@ -97,21 +95,18 @@ class UserView(ModelView):
 # -----------
 admin = Admin(name='Index', index_view=AppIndexView())
 
-admin.add_view(ProjectView(models.Project, db.session,
+admin.add_view(ProjectView(models.Project, models.db.session,
                            category='Projects',
                            name='Project list'))
-admin.add_view(SegmentView(models.Segment, db.session,
+admin.add_view(SegmentView(models.Segment, models.db.session,
                            category='Projects',
                            name='Segments'))
-admin.add_view(ModelView(models.Revision, db.session,
+admin.add_view(ModelView(models.Revision, models.db.session,
                          category='Projects',
                          name='Revisions'))
-admin.add_view(UserView(models.User, db.session,
+admin.add_view(UserView(models.User, models.db.session,
                         category='Auth',
                         name='Users'))
-admin.add_view(ModelView(models.Role, db.session,
+admin.add_view(ModelView(models.Role, models.db.session,
                          category='Auth',
                          name='Roles'))
-
-
-admin.init_app(app)

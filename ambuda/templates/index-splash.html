@@ -4,7 +4,7 @@
 {% block title %}Ambuda{% endblock %}
 
 {% macro read_more(anchor) %}
-    <a href="{{ url_for('about') }}#{{ anchor }}" class="btn btn-large">Read more &raquo;</a>
+    <a href="{{ url_for('.about') }}#{{ anchor }}" class="btn btn-large">Read more &raquo;</a>
 {% endmacro %}
 
 {% block body %}
@@ -19,19 +19,19 @@
     <div class="span4">
         <h2>Projects</h2>
         <p>Important and uncommon texts in Sanskrit, English, and related languages. None of these texts have electronic versions available online.</p>
-        {{ read_more('projects') }}
+        {{ read_more('.projects') }}
     </div>
 
     <div class="span4">
         <h2>Process</h2>
         <p>Work on one page at a time. Do as much or as little as you like. Many hands make light work, and together, we can bring these texts into the 21st century.</p>
-        {{ read_more('process') }}
+        {{ read_more('.process') }}
     </div>
 
     <div class="span4">
         <h2>Results</h2>
         <p>All results are released under the most permissive licenses possible, so that they can endure into future generations.</p>
-        {{ read_more('results') }}
+        {{ read_more('.results') }}
     </div>
 </div>
 </div>

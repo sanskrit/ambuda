@@ -1,4 +1,10 @@
 flask
+flask-admin
+flask-assets
+flask-debugtoolbar
+flask-markdown
 flask-sqlalchemy
+flask-security
 flask-uploads
+flask-wtf
 sqlalchemy

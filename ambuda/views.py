@@ -3,12 +3,12 @@ import random
 from zipfile import ZipFile
 
 import sqlalchemy.exc
-from flask import flash, redirect, render_template as render, url_for
+from flask import (current_app as app, flash, redirect, render_template as
+                    render, url_for, Blueprint)
 from flask.ext.security import current_user
 from flask.ext.security.decorators import roles_required
 from flask.ext.uploads import configure_uploads, UploadSet, IMAGES
 
-from ambuda import app, db
 from ambuda.forms import ImagesForm, SegmentEditForm
 from ambuda.models import *
 
@@ -17,16 +17,17 @@ images = UploadSet('img', IMAGES)
 GET_POST = ['GET', 'POST']
 STATUS = {}
 
+site = Blueprint('site', __name__, template_folder='templates')
 
-@app.context_processor
+@site.context_processor
 def upload_sets():
     return {
-        'images': images,
-        'Status': Status
-    }
+            'images': images,
+            'Status': Status
+            }
 
 
-# Helper functions
+    # Helper functions
 # ~~~~~~~~~~~~~~~~
 def missing_project(slug):
     flash("Sorry, we couldn't find \"%s\"." % slug, 'error')
@@ -68,7 +69,7 @@ def random_segment(project_id):
 
 # View functions
 # ~~~~~~~~~~~~~~
-@app.route('/')
+@site.route('/')
 def index():
     if current_user.is_authenticated():
         return render('index-user.html')
@@ -76,23 +77,23 @@ def index():
         return render('index-splash.html')
 
 
-@app.route('/about')
+@site.route('/about')
 def about():
     return render('about.html')
 
 
-@app.route('/how-to/proofread')
+@site.route('/how-to/proofread')
 def proofreading():
     return render('how-to/proofread.html')
 
 
-@app.route('/projects/')
+@site.route('/projects/')
 def project_list():
     projects = Project.query.all()
     return render('project_list.html', projects=projects)
 
 
-@app.route('/projects/<slug>/')
+@site.route('/projects/<slug>/')
 def project(slug):
     _project = get_project(slug)
     if _project is None:
@@ -101,8 +102,8 @@ def project(slug):
     return render('project.html', project=_project)
 
 
-@app.route('/projects/<slug>/edit/', methods=GET_POST)
-@app.route('/projects/<slug>/edit/<int:id>', methods=GET_POST)
+@site.route('/projects/<slug>/edit/', methods=GET_POST)
+@site.route('/projects/<slug>/edit/<int:id>', methods=GET_POST)
 def segment_edit(slug, id=None):
     _project = get_project(slug)
     if _project is None:
@@ -124,10 +125,10 @@ def segment_edit(slug, id=None):
         # Create a new revision. `index` is populated automatically.
         new_status = Status.next(_segment.status)
         rev = Revision(
-            content=form.content.data,
-            status=new_status,
-            segment_id=_segment.id
-        )
+                content=form.content.data,
+                status=new_status,
+                segment_id=_segment.id
+                )
         _segment.status = new_status
         _segment.revisions.append(rev)
 
@@ -140,11 +141,11 @@ def segment_edit(slug, id=None):
             return redirect(url_for('segment_edit', slug=slug, id=new_id))
 
     return render('segment.html', form=form,
-                  project=_project,
-                  segment=_segment)
+            project=_project,
+            segment=_segment)
 
 
-@app.route('/projects/<slug>/upload', methods=['GET', 'POST'])
+@site.route('/projects/<slug>/upload', methods=['GET', 'POST'])
 @roles_required('admin')
 def upload_segments(slug):
     """
@@ -172,12 +173,11 @@ def upload_segments(slug):
                 image_path=name,
                 project_id=_project.id,
                 status=Status.proofreading_1
-            ))
-        db.session.commit()
+                ))
+            db.session.commit()
 
         flash('Uploaded %s images.' % len(filenames))
 
     return render('upload-segments.html', form=form)
 
 
-configure_uploads(app, (images,))
