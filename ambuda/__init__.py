@@ -43,7 +43,5 @@ def create_app(name, config_path):
         from flask.ext.debugtoolbar import DebugToolbarExtension as DTE
         toolbar = DTE(app)
 
-    import setup
-
     app.register_blueprint(views.site)
     return app

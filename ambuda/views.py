@@ -2,12 +2,12 @@ import os
 import random
 from zipfile import ZipFile
 
-import sqlalchemy.exc
 from flask import (current_app as app, flash, redirect, render_template as
                    render, url_for, Blueprint)
 from flask.ext.security import current_user
 from flask.ext.security.decorators import roles_required
 from flask.ext.uploads import configure_uploads, UploadSet, IMAGES
+import sqlalchemy.exc
 
 from ambuda.forms import ImagesForm, SegmentEditForm
 from ambuda.models import *
@@ -17,6 +17,8 @@ images = UploadSet('img', IMAGES)
 GET_POST = ['GET', 'POST']
 STATUS = {}
 
+# Since we're using the factory pattern, we have to bind our views to a
+# blueprint.
 site = Blueprint('site', __name__, template_folder='templates')
 
 

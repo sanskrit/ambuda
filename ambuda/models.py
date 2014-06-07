@@ -82,14 +82,14 @@ class Project(Base):
     def __unicode__(self):
         return self.slug
 
-    def segs_in(self, status_list):
-        return self.q_segments(Segment.status.in_(status_list))
+    def segments_with_status(self, status_list):
+        return self.segment_query(Segment.status.in_(status_list))
 
     @property
     def num_segments(self):
-        return self.q_segments().count()
+        return self.segment_query().count()
 
-    def q_segments(self, _filter=None):
+    def segment_query(self, _filter=None):
         query = Segment.query.filter(Segment.project_id == self.id)
         if _filter is not None:
             query = query.filter(_filter)

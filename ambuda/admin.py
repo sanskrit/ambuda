@@ -5,9 +5,8 @@ from flask.ext.admin.contrib.sqla import ModelView as _ModelView
 from flask.ext.admin.contrib.sqla.form import AdminModelConverter
 from flask.ext.admin.model.form import converts
 from flask.ext.security import current_user
-
-from wtforms import fields
-from wtforms.validators import ValidationError
+import wtforms.fields
+import wtforms.validators
 
 import models
 
@@ -31,7 +30,7 @@ class AppIndexView(AdminIndexView):
             return redirect('/')
 
 
-class EnumSelectField(fields.SelectField):
+class EnumSelectField(wtforms.fields.SelectField):
 
     def __init__(self, model, **kw):
         super(EnumSelectField, self).__init__(**kw)
@@ -62,7 +61,8 @@ class EnumSelectField(fields.SelectField):
                 if self._data == key:
                     break
             else:
-                raise ValidationError(self.gettext(u'Not a valid choice'))
+                raise wtforms.validators.ValidationError(
+                        self.gettext(u'Not a valid choice'))
 
 
 class ModelConverter(AdminModelConverter):

@@ -2,9 +2,9 @@
 {% import 'macros.html' as m %}
 
 {% macro progress_bar(p) %}
-    {% set num_c = p.segs_in(Status.COMPLETE).count() %}
-    {% set num_f = p.segs_in(Status.FORMATTING).count() %}
-    {% set num_p = p.segs_in(Status.PROOFREADING).count() %}
+    {% set num_c = p.segments_with_status(Status.COMPLETE).count() %}
+    {% set num_f = p.segments_with_status(Status.FORMATTING).count() %}
+    {% set num_p = p.segments_with_status(Status.PROOFREADING).count() %}
     {% set total = num_p + num_f + num_c + 0.0 %}
     <div class="well">
         <h2>Stats</h2>
