@@ -21,7 +21,7 @@
       <div class="container">
         <div class="masthead">
           <ul class="nav nav-pills pull-right">
-            <li><a href="{{ url_for('.project_list') }}">Projects</a></li>
+            <li><a href="{{ url_for('site.project_list') }}">Projects</a></li>
             {% if current_user.has_role('admin') %}<li><a href="{{ url_for('admin.index') }}">Admin</a></li>{% endif %}
             <li>
             {% if current_user.is_authenticated() %}
@@ -40,7 +40,7 @@
             {% endif %}
             </li>
           </ul>
-          <h3 class="muted"><a href="{{ url_for('.index') }}">Ambuda</a></h3>
+          <h3 class="muted"><a href="{{ url_for('site.index') }}">Ambuda</a></h3>
         </div>
       </div>
       {% block body %}
