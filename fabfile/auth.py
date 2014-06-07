@@ -1,8 +1,12 @@
 from getpass import getpass
 from fabric.api import *
 
-from ambuda import app, datastore, db
 from flask.ext.security.script import CreateUserCommand
+from ambuda import create_app, datastore
+from ambuda.models import db
+
+
+app = create_app(__name__, 'development.config')
 
 
 def create_user(email=None):

@@ -1,3 +1,4 @@
+bcrypt
 flask
 flask-admin
 flask-assets
@@ -5,6 +6,7 @@ flask-debugtoolbar
 flask-markdown
 flask-sqlalchemy
 flask-security
+flask-scripts
 flask-uploads
 flask-wtf
 sqlalchemy
