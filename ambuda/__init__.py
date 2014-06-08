@@ -7,6 +7,7 @@ import admin
 import models
 import views
 
+
 assets = Environment()
 
 less = Bundle('less/base.less', filters='less', output='gen/style.css')
@@ -22,17 +23,22 @@ def create_app(name, config_path):
     app = Flask(name, static_folder='ambuda/static')
     app.config.from_object(config_path)
 
+    # Admin (for creating projects and other administrativa)
     admin.admin.init_app(app)
 
+    # Assets (for LESS preprocessing)
     assets.init_app(app)
     assets.app = app
     assets.url = '/static'
     assets.directory = app.config['ASSETS_DEST']
 
+    # Database (duh!)
     models.db.init_app(app)
 
+    # Security (for authentication)
     security = Security(app, datastore)
 
+    # Markdown (for file descriptions)
     Markdown(app)
 
     # File uploading

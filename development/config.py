@@ -7,6 +7,9 @@ SECRET_KEY = 'secret'
 # ------------
 ASSETS_DEST = 'ambuda/static'
 
+# flask-debugtoolbar
+DEBUG_TB_INTERCEPT_REDIRECTS = False
+
 # flask-security
 # --------------
 SECURITY_PASSWORD_HASH = 'bcrypt'
@@ -19,7 +22,10 @@ SECURITY_REGISTER_USER_TEMPLATE = 'users/register.html'
 
 # flask-sqlalchemy
 # ----------------
-SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
+development_dir = os.path.dirname(__file__)
+project_dir = os.path.dirname(development_dir)
+sqlalchemy_path = os.path.join(project_dir, 'test.db')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % sqlalchemy_path
 
 
 # Uploads

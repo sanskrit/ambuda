@@ -9,9 +9,11 @@
     <div class="well">
         <h2>Stats</h2>
     <div class="progress">
+        {% if total > 0 %}
         <div class="bar bar-success" style="width:{{ 100 * num_c / total}}%"></div>
         <div class="bar bar-warning" style="width:{{ 100 * num_f / total}}%"></div>
         <div class="bar bar-danger" style="width:{{ 100 * num_p / total}}%"></div>
+        {% endif %}
     </div>
     <p>
         <span class="label label-success">{{ num_c }} complete</span>
@@ -24,7 +26,7 @@
 {% macro buttons(p) %}
     {% if current_user.can_edit and current_user.can_edit(p) %}
     <a href="{{ url_for('projectview.edit_view', id=p.id, url=url) }}" class="btn">Edit project</a>
-    <a href="{{ url_for('upload_segments', slug=p.slug) }}" class="btn">Upload segments</a>
+    <a href="{{ url_for('site.upload_segments', slug=p.slug) }}" class="btn">Upload segments</a>
     {% endif %}
 {% endmacro %}
 
@@ -46,7 +48,8 @@
 </div>
 
 <h2>Before you start</h2>
-<p class="alert alert-warning">Make sure you've read over the <a href="{{ url_for('proofreading') }}">proofreading guidelines</a>. They're basic, but they're also very important!</p>
+<p class="alert alert-warning">Make sure you've read over the <a href="{{
+        url_for('site.proofreading') }}">proofreading guidelines</a>. They're basic, but they're also very important!</p>
 
 {% if p.instructions %}
 <article id="instructions" class="well">
@@ -54,5 +57,5 @@
 </article>
 {% endif %}
 
-<a href="{{ url_for('segment_edit', slug=p.slug) }}" class="btn btn-primary btn-large btn-block">Start helping</a>
+<a href="{{ url_for('site.segment_edit', slug=p.slug) }}" class="btn btn-primary btn-large btn-block">Start helping</a>
 {% endblock %}
